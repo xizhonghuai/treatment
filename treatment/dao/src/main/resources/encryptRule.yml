@@ -1,0 +1,38 @@
+#dataSource: !!org.apache.ibatis.datasource.pooled.PooledDataSource
+##  driverClassName: com.mysql.jdbc.Driver
+#  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://127.0.0.1:3306/edge-server?useSSL=false&amp;allowMultiQueries=true&amp;autoReconnect=true
+#  username: root
+#  password: 123456
+
+encryptRule:
+  tables:
+    device_msg:
+      columns:
+        msgbody:
+          plainColumn: msgbody
+          cipherColumn: msgbody_cipher
+          encryptor: encryptor_aes
+  encryptors:
+    encryptor_aes:
+      type: aes
+      props:
+        aes.key.value: 123456
+
+props:
+  query.with.cipher.column: false #是否使用密文列查询
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

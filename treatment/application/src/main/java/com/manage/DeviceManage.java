@@ -1,24 +1,16 @@
 package com.manage;
 
-import com.common.Context;
-import com.model.UserDO;
 import com.transmission.server.core.AbstractBootServer;
-import com.transmission.server.core.ConnectProperty;
 import com.transmission.server.core.ServerUtils;
 import com.transmission.server.core.WriteMsgUtils;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @ClassName DeviceManage
  * @Description: TODO
  * @Author xizhonghuai
- * @Date 2020/3/24
+ * @Date 2020/4/24
  * @Version V1.0
  **/
 @Component
@@ -48,45 +40,49 @@ public class DeviceManage {
         }
     }
 
-
-    public List<ConnectProperty> getOnlineDeviceList(String serviceId) {
-
-        UserDO userDO = (UserDO) Context.getInstance().getObj();
-
-        if (null != serviceId) {
-            AbstractBootServer server = (AbstractBootServer) ServerUtils.getServer(serviceId);
-            if (server != null) {
-                List<ConnectProperty> connectPropertyList = new ArrayList<>();
-                Map<Long, IoSession> managedSessions = server.getManagedSessions();
-                managedSessions.forEach((aLong, ioSession) -> {
-                    ConnectProperty connectProperty = (ConnectProperty) ioSession.getAttribute("connectProperty");
-                    if (connectProperty != null) {
-                            connectPropertyList.add(connectProperty);
-                    }
-                });
-                return connectPropertyList;
-            }
-        }
-        return null;
-    }
-
-
-    public List<ConnectProperty> getOnlineDeviceList() {
-        UserDO userDO = (UserDO) Context.getInstance().getObj();
-        Map<String, Object> servers = (ConcurrentHashMap<String, Object>) ServerUtils.getServers();
-        List<ConnectProperty> connectPropertyList = new ArrayList<>();
-        servers.forEach((id, o) -> {
-            AbstractBootServer server = (AbstractBootServer) o;
-            Map<Long, IoSession> managedSessions = server.getManagedSessions();
-            managedSessions.forEach((aLong, ioSession) -> {
-                ConnectProperty connectProperty = (ConnectProperty) ioSession.getAttribute("connectProperty");
-                if (connectProperty != null) {
-                        connectPropertyList.add(connectProperty);
-                }
-            });
-        });
-        return connectPropertyList;
-    }
+//
+//    public List<ConnectProperty> getOnlineDeviceList(String serviceId) {
+//
+//        UserDO userDO = (UserDO) AuthContext.getInstance().getObj();
+//
+//        if (null != serviceId) {
+//            AbstractBootServer server = (AbstractBootServer) ServerUtils.getServer(serviceId);
+//            if (server != null) {
+//                List<ConnectProperty> connectPropertyList = new ArrayList<>();
+//                Map<Long, IoSession> managedSessions = server.getManagedSessions();
+//                managedSessions.forEach((aLong, ioSession) -> {
+//                    ConnectProperty connectProperty = (ConnectProperty) ioSession.getAttribute("connectProperty");
+//                    if (connectProperty != null) {
+//                        if (userDO.getAuthCode().equals(connectProperty.getAuthCode())) {
+//                            connectPropertyList.add(connectProperty);
+//                        }
+//                    }
+//                });
+//                return connectPropertyList;
+//            }
+//        }
+//        return null;
+//    }
+//
+//
+//    public List<ConnectProperty> getOnlineDeviceList() {
+//        UserDO userDO = (UserDO) AuthContext.getInstance().getObj();
+//        Map<String, Object> servers = (ConcurrentHashMap<String, Object>) ServerUtils.getServers();
+//        List<ConnectProperty> connectPropertyList = new ArrayList<>();
+//        servers.forEach((id, o) -> {
+//            AbstractBootServer server = (AbstractBootServer) o;
+//            Map<Long, IoSession> managedSessions = server.getManagedSessions();
+//            managedSessions.forEach((aLong, ioSession) -> {
+//                ConnectProperty connectProperty = (ConnectProperty) ioSession.getAttribute("connectProperty");
+//                if (connectProperty != null) {
+//                    if (userDO.getAuthCode().equals(connectProperty.getAuthCode())) {
+//                        connectPropertyList.add(connectProperty);
+//                    }
+//                }
+//            });
+//        });
+//        return connectPropertyList;
+//    }
 
 
 }

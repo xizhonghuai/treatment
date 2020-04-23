@@ -1,8 +1,10 @@
 package com.hander;
 
+import com.msgpush.MessagePush;
 import com.transmission.business.BusinessHandler;
 import com.transmission.business.Handler;
 import com.transmission.server.core.IotSession;
+import com.wsdebug.push.WebSocketPush;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -11,7 +13,7 @@ import org.apache.mina.core.session.IoSession;
  * @ClassName InterceptHandler
  * @Description: TODO
  * @Author xizhonghuai
- * @Date 2020/5/14
+ * @Date 2020/4/14
  * @Version V1.0
  **/
 @Slf4j
@@ -21,7 +23,6 @@ public class InterceptHandler extends Handler {
         super(businessHandler);
     }
 
-    private IotSession iotSession;
 
     private String serviceId;
 
@@ -39,21 +40,19 @@ public class InterceptHandler extends Handler {
     @Override
     public void sessionOpened(IoSession session) {
         log.info(session.getRemoteAddress() + "连接");
-        iotSession = new IotSession(session);
-        iotSession.setServiceId(serviceId);
-        iotSession.setConnectType(connectType);
-        businessHandler.sessionOpened(iotSession);
+        businessHandler.sessionOpened(new IotSession(session,serviceId,connectType));
     }
 
     @Override
     public void sessionClosed(IoSession session) {
-        businessHandler.sessionClosed(iotSession);
-        iotSession = null;
+        businessHandler.sessionClosed(new IotSession(session,serviceId,connectType));
+
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) {
-        businessHandler.sessionIdle(iotSession);
+        log.info(session.getRemoteAddress() + "空闲");
+        businessHandler.sessionIdle(new IotSession(session,serviceId,connectType));
     }
 
     @Override
@@ -63,7 +62,10 @@ public class InterceptHandler extends Handler {
 
     @Override
     public void messageReceived(IoSession session, Object message) {
+        IotSession iotSession = new IotSession(session, serviceId, connectType);
         businessHandler.messageReceived(iotSession, message);
+        MessagePush messagePush = new WebSocketPush();
+        messagePush.push(message);
         iotSession.updateActivityTime();//更新活动时间
     }
 }

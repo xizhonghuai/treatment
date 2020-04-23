@@ -8,4 +8,5 @@ public interface BaseMapper<T> {
     List<T> select(HashMap<String, Object> map);
     List<T> selectAll();
     void updateByPrimary(HashMap<String, Object> map);
+    void deleteByPrimary(HashMap<String, Object> map);
 }

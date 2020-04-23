@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.AccountInfoMapper">
+    <resultMap id="BaseResultMap" type="com.model.AccountInfoDo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="auth_code" jdbcType="VARCHAR" property="authCode"/>
+        <result column="account_type" jdbcType="INTEGER" property="accountType"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="is_activate" jdbcType="BOOLEAN" property="isActivate"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id,account,password,auth_code,account_type,username,company,sex,age,address,tel,is_activate,create_date
+  </sql>
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from account_info
+        where 1=1
+
+        <if test="id != null">
+            and id = #{id,jdbcType=VARCHAR}
+        </if>
+
+        <if test="account != null">
+            and account = #{account,jdbcType=VARCHAR}
+        </if>
+        <if test="tel != null">
+            and tel = #{tel,jdbcType=VARCHAR}
+        </if>
+
+        <if test="authCode != null">
+            and auth_code = #{authCode,jdbcType=VARCHAR}
+        </if>
+
+
+
+
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.model.AccountInfoDo">
+        insert into account_info (account,password,auth_code,account_type,username,company,sex,age,address,tel,is_activate,create_date)
+        values (
+        #{account,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{authCode,jdbcType=VARCHAR},
+        #{accountType,jdbcType=INTEGER},
+        #{username,jdbcType=VARCHAR},
+        #{company,jdbcType=VARCHAR},
+        #{sex,jdbcType=INTEGER},
+        #{age,jdbcType=INTEGER},
+        #{address,jdbcType=VARCHAR},
+        #{tel,jdbcType=VARCHAR},
+        #{isActivate,jdbcType=BOOLEAN},
+        #{createDate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+
+    <update id="updateByPrimary" parameterType="java.util.Map">
+        update account_info
+        <set>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+
+            <if test="company != null">
+                company = #{company,jdbcType=VARCHAR},
+            </if>
+
+            <if test="isActivate != null">
+                is_activate = #{isActivate,jdbcType=BOOLEAN},
+            </if>
+
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM account_info
+    </select>
+
+    <delete id="deleteByPrimary" parameterType="java.util.Map" >
+        delete FROM account_info where id = #{id,jdbcType=INTEGER}  and auth_ode = #{authCode,jdbcType=VARCHAR}
+    </delete>
+
+
+</mapper>

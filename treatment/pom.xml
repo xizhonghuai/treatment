@@ -11,6 +11,7 @@
     <modules>
         <module>application</module>
         <module>dao</module>
+        <module>cache</module>
     </modules>
 
 

@@ -1,22 +1,22 @@
 package com.common;
 
 /**
- * @ClassName Context
+ * @ClassName AuthContext
  * @Description: TODO
  * @Author xizhonghuai
  * @Date 2020/4/9
  * @Version V1.0
  **/
-public class Context {
+public class AuthContext {
 
-    private static Context instance;
+    private static AuthContext instance;
 
-    private Context() {
+    private AuthContext() {
     }
 
-    public static synchronized Context getInstance() {
+    public static synchronized AuthContext get() {
         if (instance == null) {
-            instance = new Context();
+            instance = new AuthContext();
         }
         return instance;
     }
@@ -36,5 +36,7 @@ public class Context {
 
           this.objThreadLocal.remove();
     }
+
+
 }
 

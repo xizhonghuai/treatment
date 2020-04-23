@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.EmpowerMapper">
+    <resultMap id="BaseResultMap" type="com.model.EmpowerDo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="auth_code" jdbcType="VARCHAR" property="authCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id,device_id,auth_code
+  </sql>
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from empower
+        where 1=1
+
+        <if test="id != null">
+            and id = #{id,jdbcType=VARCHAR}
+        </if>
+
+        <if test="authCode != null">
+            and auth_code = #{authCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="deviceId != null">
+            and device_id = #{deviceId,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.model.DeviceInfoDo">
+        insert into empower (device_id,auth_code)
+        values (
+        #{deviceId,jdbcType=VARCHAR},
+        #{authCode,jdbcType=VARCHAR},
+        )
+    </insert>
+
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM empower
+    </select>
+
+    <delete id="deleteByPrimary" parameterType="java.util.Map" >
+        delete FROM empower where auth_code = #{authCode,jdbcType=INTEGER}  and device_id = #{deviceId,jdbcType=VARCHAR}
+    </delete>
+
+
+</mapper>

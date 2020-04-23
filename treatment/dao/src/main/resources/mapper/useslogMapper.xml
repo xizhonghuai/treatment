@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UsesLogMapper">
+    <resultMap id="BaseResultMap" type="com.model.UsesLogDo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="auth_code" jdbcType="VARCHAR" property="authCode"/>
+        <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
+        <result column="duration" jdbcType="INTEGER" property="duration"/>
+        <result column="cost" jdbcType="REAL" property="cost"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id,auth_code,order_id,duration,cost,create_date
+  </sql>
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from uses_log
+        where 1=1
+
+        <if test="id != null">
+            and id = #{id,jdbcType=VARCHAR}
+        </if>
+
+        <if test="authCode != null">
+            and auth_code = #{authCode,jdbcType=VARCHAR}
+        </if>
+        <if test="orderId != null">
+            and order_id = #{orderId,jdbcType=VARCHAR}
+        </if>
+
+        <choose>
+            <when test="beginDate == null  or  endDate == null">
+                AND create_date &gt; date_sub(now(), interval 12 hour)
+            </when>
+            <otherwise>
+                AND create_date &gt;= #{beginDate,jdbcType=TIMESTAMP}
+                AND create_date &lt;= #{endDate,jdbcType=TIMESTAMP}
+            </otherwise>
+        </choose>
+
+
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.model.DeviceInfoDo">
+        insert into uses_log (auth_code,order_id,duration,cost,create_date)
+        values (
+        #{authCode,jdbcType=VARCHAR},
+        #{orderId,jdbcType=VARCHAR},
+        #{duration,jdbcType=INTEGER},
+        #{cost,jdbcType=REAL},
+        #{createDate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+
+
+
+
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM uses_log
+    </select>
+
+
+
+</mapper>

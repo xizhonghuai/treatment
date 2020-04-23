@@ -1,4 +1,4 @@
-package com.businesshandler;
+package com.hander.businesshandler;
 
 
 import com.transmission.business.BusinessHandler;
@@ -16,14 +16,13 @@ public class DefaultBusinessHandler implements BusinessHandler {
 
     @Override
     public Boolean init() {
-        return null;
+        return true;
     }
 
     @Override
     public void destroy() {
 
     }
-
 
     @Override
     public void messageReceived(IotSession iotSession, Object message) {
@@ -46,10 +45,5 @@ public class DefaultBusinessHandler implements BusinessHandler {
         iotSession.close();
     }
 
-    @Override
-    public void forward(Object message) {
 
-
-
-    }
 }
