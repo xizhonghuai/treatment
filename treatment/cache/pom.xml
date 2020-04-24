@@ -11,5 +11,14 @@
 
     <artifactId>cache</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+    </dependencies>
+
 
 </project>

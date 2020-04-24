@@ -1,4 +1,4 @@
-package com.common;
+package com.config;
 
 /**
  * @ClassName AuthContext

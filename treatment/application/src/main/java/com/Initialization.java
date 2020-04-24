@@ -1,4 +1,4 @@
-package com.init;
+package com;
 
 import com.Dao;
 import com.manage.ServerManage;

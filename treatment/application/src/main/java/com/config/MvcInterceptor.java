@@ -17,7 +17,22 @@ import javax.servlet.http.HttpServletResponse;
 public class MvcInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        UserDO userDO = (UserDO) request.getSession().getAttribute("token");
+        String url = request.getRequestURI();
+        System.out.println(url);
+        if (url.indexOf("/api/account/reg")>0){
+            return true;
+        }
+
+        if (url.indexOf("/api/account/login")>0){
+            return true;
+        }
+
+
+
+
+
+
+        //        UserDO userDO = (UserDO) request.getSession().getAttribute("token");
 //        UserDO userDO = new UserDO();
 //        userDO.setUsername("root");
 //        userDO.setAuthCode("@");

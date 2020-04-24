@@ -44,7 +44,24 @@
     </select>
 
     <delete id="deleteByPrimary" parameterType="java.util.Map" >
-        delete FROM empower where auth_code = #{authCode,jdbcType=INTEGER}  and device_id = #{deviceId,jdbcType=VARCHAR}
+            delete FROM empower where device_id = #{deviceId,jdbcType=VARCHAR} and auth_code = #{authCode,jdbcType=VARCHAR}
+    </delete>
+
+
+    <delete id="deleteByDeviceId" parameterType="java.lang.String" >
+
+        <if test="deviceId != null">
+            delete FROM empower where device_id = #{deviceId,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+
+    <delete id="deleteByAuthCode" parameterType="java.lang.String" >
+
+        <if test="authCode != null">
+            delete FROM empower where auth_code = #{authCode,jdbcType=VARCHAR}
+        </if>
+
     </delete>
 
 

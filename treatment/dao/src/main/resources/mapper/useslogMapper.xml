@@ -4,13 +4,14 @@
     <resultMap id="BaseResultMap" type="com.model.UsesLogDo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="auth_code" jdbcType="VARCHAR" property="authCode"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
         <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
         <result column="duration" jdbcType="INTEGER" property="duration"/>
         <result column="cost" jdbcType="REAL" property="cost"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
     </resultMap>
     <sql id="Base_Column_List">
-     id,auth_code,order_id,duration,cost,create_date
+     id,device_id,auth_code,order_id,duration,cost,create_date
   </sql>
     <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
         select
@@ -20,6 +21,10 @@
 
         <if test="id != null">
             and id = #{id,jdbcType=VARCHAR}
+        </if>
+
+        <if test="deviceId != null">
+            and device_id = #{deviceId,jdbcType=VARCHAR}
         </if>
 
         <if test="authCode != null">
@@ -45,8 +50,9 @@
 
 
     <insert id="insert" parameterType="com.model.DeviceInfoDo">
-        insert into uses_log (auth_code,order_id,duration,cost,create_date)
+        insert into uses_log (device_id,auth_code,order_id,duration,cost,create_date)
         values (
+         #{deviceId,jdbcType=VARCHAR},
         #{authCode,jdbcType=VARCHAR},
         #{orderId,jdbcType=VARCHAR},
         #{duration,jdbcType=INTEGER},

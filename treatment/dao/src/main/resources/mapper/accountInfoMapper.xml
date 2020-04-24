@@ -97,7 +97,7 @@
                 sex = #{sex,jdbcType=INTEGER},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where  account = #{account,jdbcType=VARCHAR},
     </update>
 
 

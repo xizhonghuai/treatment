@@ -18,6 +18,7 @@ public class UsesLogDo extends BaseModel {
 //    cost	float
 //    create_date	dateTime
 
+    private String deviceId;
     private String orderId;
     private Integer duration;
     private Float cost;

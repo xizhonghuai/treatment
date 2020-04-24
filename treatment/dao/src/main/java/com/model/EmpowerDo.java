@@ -17,4 +17,6 @@ public class EmpowerDo extends BaseModel {
 
     private String deviceId;
 
+
+
 }
