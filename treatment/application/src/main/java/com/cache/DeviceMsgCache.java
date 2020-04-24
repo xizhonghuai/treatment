@@ -21,7 +21,7 @@ public class DeviceMsgCache {
 
     private static Map<String, DeviceMsgDo> cache = new ConcurrentHashMap<>();
 
-    public void update(String deviceId,DeviceMsgDo deviceMsgDo){
+    public void add(String deviceId,DeviceMsgDo deviceMsgDo){
         cache.put(deviceId,deviceMsgDo);
     }
 

@@ -17,6 +17,6 @@ public class BaseModel {
 
     private Integer id;
     private Date createDate = new Date();
-    @JSONField(serialize=false)
+//    @JSONField(serialize=false)
     private String authCode;
 }

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/usedata/")
+@RequestMapping("/api/data/")
 public class UseDataController {
 
     @Autowired
@@ -46,8 +46,8 @@ public class UseDataController {
     private UsesLogService usesLogService;
 
 
-    @RequestMapping(value = "/getorders", method = RequestMethod.GET)
-    public RestResult<List<DeviceMsgDo>> getOrders(
+    @RequestMapping(value = "/getUseData", method = RequestMethod.GET)
+    public RestResult<List<DeviceMsgDo>> getUseData(
             @RequestParam(value = "authCode", required = false) String authCode,
             @RequestParam(value = "orderId", required = false) String orderId,
             @RequestParam(value = "beginDate", required = false) Date beginDate,
@@ -87,7 +87,7 @@ public class UseDataController {
 
 
 
-    @RequestMapping(value = "/getuserecord", method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrderRecord", method = RequestMethod.GET)
     public RestResult<List<UsesLogDo>> getUseRecord(
             @RequestParam(value = "authCode", required = false) String authCode,
             @RequestParam(value = "orderId", required = false) String orderId,
@@ -125,15 +125,6 @@ public class UseDataController {
             return new RestResult("err:" + e.getMessage(), "10001");
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 }

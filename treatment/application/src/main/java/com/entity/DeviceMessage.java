@@ -22,4 +22,8 @@ public class DeviceMessage {
     private String id;
     private HashMap<String, Object> body;
     private Date date = new Date();
+
+    public DeviceMessage(String id) {
+        this.id = id;
+    }
 }
