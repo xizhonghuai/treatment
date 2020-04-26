@@ -53,7 +53,7 @@
         #{latitude,jdbcType=VARCHAR},
         #{nurse,jdbcType=VARCHAR},
         #{tel,jdbcType=VARCHAR},
-        #{dtu_id,jdbcType=VARCHAR},
+        #{dtuId,jdbcType=VARCHAR},
         #{createDate,jdbcType=TIMESTAMP}
         )
     </insert>

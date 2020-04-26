@@ -1,9 +1,8 @@
 package com.hander.businesshandler;
 
 
-import com.SpringUtil;
+import com.config.SpringUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.cache.UsePlanCache;
 import com.entity.DeviceMessage;
 import com.model.UsesLogDo;
@@ -50,18 +49,37 @@ public class DefaultBusinessHandler implements BusinessHandler {
             HashMap<String, Object> body = deviceMsg.getBody();
             if (body != null) {
 
-                //请求uid min
+                //返回数据
+                if (body.get("np") !=null){
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+                //请求uid oid min
                 List<String> pulls = (List<String>) body.get("pull");
-                if (pulls != null && pulls.contains("uid")){
+                if (pulls != null && pulls.contains("uid")) {
 
                     DeviceMessage ack = new DeviceMessage(deviceId);
                     HashMap<String, Object> bodyMap = new HashMap<>();
                     UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
                     UsesLogDo usesLogDo = usePlanCache.get(deviceId);
-                    if (usesLogDo !=null){
-                        bodyMap.put("oid",usesLogDo.getOrderId());
-                        bodyMap.put("uid",usesLogDo.getAuthCode());
-                        bodyMap.put("min",usesLogDo.getDuration());
+                    if (usesLogDo != null) {
+                        bodyMap.put("oid", usesLogDo.getOrderId());
+                        bodyMap.put("uid", usesLogDo.getAuthCode());
+                        bodyMap.put("min", usesLogDo.getDuration());
                     }
                     ack.setBody(bodyMap);
                     //返回uid、oid、min
@@ -71,8 +89,8 @@ public class DefaultBusinessHandler implements BusinessHandler {
 
                 //返回状态
                 String state = (String) body.get("state");
-                if (state != null){
-                    if ("done".equals(state)){
+                if (state != null) {
+                    if ("done".equals(state)) {
                         //删除缓存
                         UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
                         UsesLogDo us = usePlanCache.remove(deviceId);
@@ -83,17 +101,20 @@ public class DefaultBusinessHandler implements BusinessHandler {
 
                 }
             } else {
-                //回复心跳
-                iotSession.sendMsg(JSON.toJSONString(new DeviceMessage(iotSession.getDeviceId())));
+
+
             }
+
+
+
 
         } catch (Exception e) {
             log.info(e.toString());
             e.printStackTrace();
 
         }
-
-
+        //回复心跳
+        iotSession.sendMsg(JSON.toJSONString(new DeviceMessage(iotSession.getDeviceId())));
     }
 
     @Override

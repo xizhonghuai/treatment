@@ -4,7 +4,7 @@ import com.msgpush.MessagePush;
 import com.transmission.business.BusinessHandler;
 import com.transmission.business.Handler;
 import com.transmission.server.core.IotSession;
-import com.wsdebug.push.WebSocketPush;
+import com.debug.push.WebSocketPush;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -65,7 +65,7 @@ public class InterceptHandler extends Handler {
         IotSession iotSession = new IotSession(session, serviceId, connectType);
         businessHandler.messageReceived(iotSession, message);
         MessagePush messagePush = new WebSocketPush();
-        messagePush.push(message);
-        iotSession.updateActivityTime();//更新活动时间
+        messagePush.push(message.toString());
+//        iotSession.updateActivityTime();//更新活动时间
     }
 }

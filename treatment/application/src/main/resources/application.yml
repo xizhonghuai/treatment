@@ -1,13 +1,13 @@
 server:
-  port: 8080
+  port: 8083
 
 
 sysConf:
   handlerJarFileBasePath: C:\yxcloud\handlers
   decodePluginBasePath: C:\yxcloud\decodeplugins
   resourcePath: C:\yxcloud\resources
-  debugPort: 10373
-  defaultServerPort: 8083
+  debugPort: 8088
+  defaultServerPort: 8089
 
 
 

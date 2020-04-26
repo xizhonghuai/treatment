@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wsdebug;
+package com.debug;
 
 import org.springframework.stereotype.Component;
 

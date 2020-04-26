@@ -1,7 +1,7 @@
-package com;
+package com.init;
 
 import com.Dao;
-import com.manage.ServerManage;
+import com.commonmanger.ServerManage;
 import com.toolutils.ConstantUtils;
 import com.transmission.server.core.BootServerParameter;
 import com.transmission.server.debug.DebugService;
@@ -43,10 +43,10 @@ public class Initialization {
 
 
 
-//
-//    @Autowired
-//    private Dao dao;
-//
+
+    @Autowired
+    private Dao dao;
+
     @Autowired
     private ServerManage serverManage;
 
@@ -61,7 +61,7 @@ public class Initialization {
             //启动调试服务
             new DebugService(debugPort).start();
             //数据库初始化
-//            dao.init();
+            dao.init();
 
 
             //todo 启动服务

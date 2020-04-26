@@ -30,7 +30,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.model.DeviceInfoDo">
+    <insert id="insert" parameterType="com.model.EmpowerDo">
         insert into empower (device_id,auth_code)
         values (
         #{deviceId,jdbcType=VARCHAR},
@@ -50,7 +50,7 @@
 
     <delete id="deleteByDeviceId" parameterType="java.lang.String" >
 
-        <if test="deviceId != null">
+        <if test="_parameter != null">
             delete FROM empower where device_id = #{deviceId,jdbcType=VARCHAR}
         </if>
     </delete>
@@ -58,7 +58,7 @@
 
     <delete id="deleteByAuthCode" parameterType="java.lang.String" >
 
-        <if test="authCode != null">
+        <if test="_parameter != null">
             delete FROM empower where auth_code = #{authCode,jdbcType=VARCHAR}
         </if>
 

@@ -47,8 +47,8 @@ public class DeviceMsgController {
     @Autowired
     private DeviceMsgCache deviceMsgCache;
 
-    @RequestMapping(value = "/getstatus", method = RequestMethod.GET)
-    public RestResult<List<DeviceMsgDo>> getDeviceSate(
+    @RequestMapping(value = "/getRealTimeData", method = RequestMethod.GET)
+    public RestResult<List<DeviceMsgDo>> getRealTimeData(
             @RequestParam(value = "deviceId", required = false) String deviceId
     ) {
         try {

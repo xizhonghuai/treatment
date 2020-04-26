@@ -1,5 +1,7 @@
 package com.config;
 
+import com.common.DBConstantUnit;
+import com.model.AccountInfoDo;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -27,22 +29,30 @@ public class MvcInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (url.indexOf("/api/debug")>0){
+            return true;
+        }
+
+        AccountInfoDo accountInfoDo = new AccountInfoDo();
+        accountInfoDo.setAccount("admin");
+        accountInfoDo.setAccountType(DBConstantUnit.ACCOUNT_ADMIN);
+        accountInfoDo.setIsActivate(true);
+
+        AuthContext.get().setObj(accountInfoDo);
 
 
 
 
 
-        //        UserDO userDO = (UserDO) request.getSession().getAttribute("token");
-//        UserDO userDO = new UserDO();
-//        userDO.setUsername("root");
-//        userDO.setAuthCode("@");
-//        AuthContext.getInstance().setObj(userDO);
+
+
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-//        AuthContext.getInstance().clear();
+
+        AuthContext.get().clear();
     }
 
 

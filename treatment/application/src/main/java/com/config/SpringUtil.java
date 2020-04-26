@@ -1,4 +1,4 @@
-package com;
+package com.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

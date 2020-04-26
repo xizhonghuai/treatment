@@ -1,8 +1,8 @@
-package com.wsdebug.push;
+package com.debug.push;
 
 import com.alibaba.fastjson.JSON;
 import com.msgpush.MessagePush;
-import com.wsdebug.WSService;
+import com.debug.WSService;
 
 
 /**

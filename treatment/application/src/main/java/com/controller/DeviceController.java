@@ -119,7 +119,7 @@ public class DeviceController {
             map.put("cityId",cityId);
 
             if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_ADMIN){
-                new RestResult<>(deviceInfoService.select(map));
+              return   new RestResult<>(deviceInfoService.select(map));
             }
 
             HashMap<String,Object> empowerPar = new HashMap<>();

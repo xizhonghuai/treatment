@@ -1,4 +1,4 @@
-package com.manage;
+package com.commonmanger;
 
 import com.hander.InterceptHandler;
 import com.hander.businesshandler.DefaultBusinessHandler;
