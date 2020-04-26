@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/data/")
-public class UseDataController {
+public class TreatmentDataController {
 
     @Autowired
     private LoginAccount loginAccount;
@@ -46,8 +46,8 @@ public class UseDataController {
     private UsesLogService usesLogService;
 
 
-    @RequestMapping(value = "/getUseData", method = RequestMethod.GET)
-    public RestResult<List<DeviceMsgDo>> getUseData(
+    @RequestMapping(value = "/getDetailsData", method = RequestMethod.GET)
+    public RestResult<List<DeviceMsgDo>> getDetailsData(
             @RequestParam(value = "authCode", required = false) String authCode,
             @RequestParam(value = "orderId", required = false) String orderId,
             @RequestParam(value = "beginDate", required = false) Date beginDate,
@@ -87,8 +87,8 @@ public class UseDataController {
 
 
 
-    @RequestMapping(value = "/getOrderRecord", method = RequestMethod.GET)
-    public RestResult<List<UsesLogDo>> getUseRecord(
+    @RequestMapping(value = "/getRecord", method = RequestMethod.GET)
+    public RestResult<List<UsesLogDo>> getRecord(
             @RequestParam(value = "authCode", required = false) String authCode,
             @RequestParam(value = "orderId", required = false) String orderId,
             @RequestParam(value = "beginDate", required = false) Date beginDate,
