@@ -54,7 +54,7 @@
         #{authCode,jdbcType=VARCHAR},
         #{orderId,jdbcType=VARCHAR},
         #{serialId,jdbcType=INTEGER},
-        #{msg_body,jdbcType=VARCHAR},
+        #{msgBody,jdbcType=VARCHAR},
         #{createDate,jdbcType=TIMESTAMP}
         )
 

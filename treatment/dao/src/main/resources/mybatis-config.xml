@@ -26,6 +26,6 @@
         <mapper resource="mapper/deviceInfoMapper.xml"/>
         <mapper resource="mapper/deviceMsgMapper.xml"/>
         <mapper resource="mapper/empowerMapper.xml"/>
-        <mapper resource="mapper/useslogMapper.xml"/>
+        <mapper resource="mapper/usePlanMapper.xml"/>
     </mappers>
 </configuration>

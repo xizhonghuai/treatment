@@ -1,7 +1,7 @@
 package com.service;
 
-import com.mapper.UsesLogMapper;
-import com.model.UsesLogDo;
+import com.mapper.UsePlanMapper;
+import com.model.UsePlanDo;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
  * @Version V1.0
  **/
 @Component
-public class UsesLogService extends BaseService<UsesLogMapper,UsesLogDo> {
+public class UsePlanService extends BaseService<UsePlanMapper,UsePlanDo> {
 
 }

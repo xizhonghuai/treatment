@@ -6,13 +6,12 @@ import com.config.LoginAccount;
 import com.config.SystemConstantUnit;
 import com.model.AccountInfoDo;
 import com.model.EmpowerDo;
-import com.model.UsesLogDo;
+import com.model.UsePlanDo;
+import com.service.AccountInfoService;
 import com.service.EmpowerService;
-import com.service.UsesLogService;
+import com.service.UsePlanService;
 import lib.RestResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.ibatis.reflection.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +34,11 @@ public class TreatmentPlanController {
     private EmpowerService empowerService;
 
     @Autowired
-    UsesLogService usesLogService;
+    private UsePlanService usePlanService;
+
+    @Autowired
+    private AccountInfoService accountInfoService;
+
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -52,16 +55,24 @@ public class TreatmentPlanController {
                 new RestResult<>(SystemConstantUnit.PERMISSION, "10001");
             }
 
-            UsesLogDo usesLogDo = usePlanCache.get(deviceId);
+            UsePlanDo usesLogDo = usePlanCache.get(deviceId);
             if (usesLogDo != null) {
                 return new RestResult("设备使用中", "10000");
             }
 
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("account",account);
+            List<AccountInfoDo> accountInfoDos = accountInfoService.select(map);
+            if (accountInfoDos.size()<=0){
+               return new RestResult<>("请先添加客户资料","5555");
+            }
+
             if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_ADMIN) {
-                UsesLogDo use = new UsesLogDo();
+                UsePlanDo use = new UsePlanDo();
                 use.setDeviceId(deviceId);
                 use.setDuration(duration);
                 use.setAccount(account);
+                use.setAuthCode(accountInfoDos.get(0).getAuthCode());
                 use.setOrderId(UUID.randomUUID().toString());
                 usePlanCache.add(deviceId, use);
                 return new RestResult();
@@ -73,10 +84,11 @@ public class TreatmentPlanController {
             if (empowers.size() > 0) {
                 List<String> empDevices = empowers.stream().map(d -> d.getDeviceId()).collect(Collectors.toList());
                 if (empDevices.contains(deviceId)) {
-                    UsesLogDo use = new UsesLogDo();
+                    UsePlanDo use = new UsePlanDo();
                     use.setDeviceId(deviceId);
                     use.setDuration(duration);
                     use.setAccount(account);
+                    use.setAuthCode(accountInfoDos.get(0).getAuthCode());
                     use.setOrderId(UUID.randomUUID().toString());
                     usePlanCache.add(deviceId, use);
                     return new RestResult();
@@ -91,11 +103,11 @@ public class TreatmentPlanController {
 
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public RestResult<List<UsesLogDo>> get(
+    public RestResult<List<UsePlanDo>> get(
             @RequestParam(value = "deviceId",required = false) String deviceId
     ){
         if (deviceId != null ){
-            List<UsesLogDo> usesLogDos = new ArrayList<>();
+            List<UsePlanDo> usesLogDos = new ArrayList<>();
             if (usePlanCache.get(deviceId) != null){
                 usesLogDos.add(usePlanCache.get(deviceId));
             }
@@ -110,14 +122,19 @@ public class TreatmentPlanController {
             @RequestParam(value = "deviceId") String deviceId,
             @RequestParam(value = "beforeState") String beforeState,
             @RequestParam(value = "afterState") String afterState
+
     )
     {
         try {
-            UsesLogDo plan = usePlanCache.get(deviceId);
+
+
+
+
+            UsePlanDo plan = usePlanCache.get(deviceId);
             plan.setAfterState(afterState);
             plan.setBeforeState(beforeState);
             //插入记录到DB
-            usesLogService.insert(plan);
+            usePlanService.insert(plan);
             usePlanCache.remove(deviceId);
             return new RestResult();
 

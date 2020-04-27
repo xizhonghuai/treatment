@@ -1,6 +1,6 @@
 package com.cache;
 
-import com.model.UsesLogDo;
+import com.model.UsePlanDo;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,27 +10,27 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class UsePlanCache {
 
-    private static Map<String, UsesLogDo> cache = new ConcurrentHashMap<>();
+    private static Map<String, UsePlanDo> cache = new ConcurrentHashMap<>();
 
-    public void add(String deviceId,UsesLogDo usesLogDo){
+    public void add(String deviceId,UsePlanDo usesLogDo){
         usesLogDo.setOrderId(UUID.randomUUID().toString());
         cache.put(deviceId,usesLogDo);
     }
 
-    public  Map<String, UsesLogDo> getCache() {
+    public  Map<String, UsePlanDo> getCache() {
         return cache;
     }
 
-    public UsesLogDo get(String deviceId){
+    public UsePlanDo get(String deviceId){
         return cache.get(deviceId);
     }
 
-    public void update(String deviceId,UsesLogDo usesLogDo){
+    public void update(String deviceId,UsePlanDo usesLogDo){
         cache.remove(deviceId);
         add(deviceId,usesLogDo);
     }
 
-    public UsesLogDo remove(String deviceId){
+    public UsePlanDo remove(String deviceId){
         return  cache.remove(deviceId);
     }
 

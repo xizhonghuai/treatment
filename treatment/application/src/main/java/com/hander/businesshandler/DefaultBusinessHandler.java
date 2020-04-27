@@ -1,12 +1,14 @@
 package com.hander.businesshandler;
 
 
+import com.cache.DeviceMsgCache;
 import com.config.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.cache.UsePlanCache;
 import com.entity.DeviceMessage;
-import com.model.UsesLogDo;
-import com.service.UsesLogService;
+import com.model.DeviceMsgDo;
+import com.model.UsePlanDo;
+import com.service.DeviceMsgService;
 import com.transmission.business.BusinessHandler;
 import com.transmission.server.core.IotSession;
 import lombok.extern.slf4j.Slf4j;
@@ -49,24 +51,39 @@ public class DefaultBusinessHandler implements BusinessHandler {
             HashMap<String, Object> body = deviceMsg.getBody();
             if (body != null) {
 
+                UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
+                DeviceMsgCache deviceMsgCache = (DeviceMsgCache) SpringUtil.getBean("deviceMsgCache");
+                UsePlanDo usePlanDo = usePlanCache.get(deviceId);
+
                 //返回数据
-                if (body.get("np") !=null){
+                if (body.get("np") !=null  && usePlanDo != null){
+                    if (usePlanDo.getOrderId().equals((String) body.get("oid"))){
 
 
 
 
+
+                        //更新使用时长
+                        usePlanDo.setRealDuration((Integer) body.get("min"));
+                        usePlanCache.update(deviceId,usePlanDo);
+
+
+                        DeviceMsgService deviceMsgService = (DeviceMsgService) SpringUtil.getBean("deviceMsgService");
+                        DeviceMsgDo deviceMsgDo = new DeviceMsgDo();
+                        deviceMsgDo.setDeviceId(deviceMsg.getId());
+                        deviceMsgDo.setOrderId((String) body.get("oid"));
+                        deviceMsgDo.setSerialId((Integer) body.get("sid"));
+                        deviceMsgDo.setMsgBody(JSON.toJSONString(body));
+                        deviceMsgDo.setAuthCode(usePlanDo.getAuthCode());
+                        //数据入库
+                        deviceMsgService.insert(deviceMsgDo);
+
+                        //更新缓存
+                        deviceMsgCache.update(deviceId,deviceMsgDo);
+
+
+                    }
                 }
-
-
-
-
-
-
-
-
-
-
-
 
                 //请求uid oid min
                 List<String> pulls = (List<String>) body.get("pull");
@@ -74,8 +91,7 @@ public class DefaultBusinessHandler implements BusinessHandler {
 
                     DeviceMessage ack = new DeviceMessage(deviceId);
                     HashMap<String, Object> bodyMap = new HashMap<>();
-                    UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
-                    UsesLogDo usesLogDo = usePlanCache.get(deviceId);
+                    UsePlanDo usesLogDo = usePlanCache.get(deviceId);
                     if (usesLogDo != null) {
                         bodyMap.put("oid", usesLogDo.getOrderId());
                         bodyMap.put("uid", usesLogDo.getAuthCode());
@@ -93,7 +109,7 @@ public class DefaultBusinessHandler implements BusinessHandler {
 //                    if ("done".equals(state)) {
 //                        //删除缓存
 //                        UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
-//                        UsesLogDo us = usePlanCache.remove(deviceId);
+//                        UsePlanDo us = usePlanCache.remove(deviceId);
 //                        //插入记录到DB
 //                        UsesLogService usesLogService = (UsesLogService) SpringUtil.getBean("usesLogService");
 //                        usesLogService.insert(us);

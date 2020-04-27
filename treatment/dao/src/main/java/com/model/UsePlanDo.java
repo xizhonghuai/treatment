@@ -3,14 +3,14 @@ package com.model;
 import lombok.Data;
 
 /**
- * @ClassName UsesLogDo
+ * @ClassName UsePlanDo
  * @Description: TODO
  * @Author xizhonghuai
  * @Date 2020/4/23
  * @Version V1.0
  **/
 @Data
-public class UsesLogDo extends BaseModel {
+public class UsePlanDo extends BaseModel {
 //    id	int
 //    auth_code	String
 //    order_id	String
@@ -24,9 +24,11 @@ public class UsesLogDo extends BaseModel {
     private String deviceId;
     private String orderId;
     private Integer duration;
+    private Integer realDuration;
     private Float cost;
     private String beforeState;
     private String afterState;
+
 
 
 

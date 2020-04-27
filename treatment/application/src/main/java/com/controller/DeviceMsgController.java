@@ -56,12 +56,19 @@ public class DeviceMsgController {
 //            HashMap<String, Object> map = new HashMap();
 //            map.put("deviceId", deviceId);
 
-            if  (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_USER) {
+            if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_USER) {
                 return new RestResult(SystemConstantUnit.PERMISSION, "10001");
             }
 
             if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_ADMIN) {
-                new RestResult<>(new ArrayList<>(deviceMsgCache.getCache().values()));
+
+                List<DeviceMsgDo> deviceMsgDos = new ArrayList<>(deviceMsgCache.getCache().values());
+                if (deviceId != null) {
+                    List<DeviceMsgDo> collect = deviceMsgDos.stream().filter(d -> d.getDeviceId().equals(deviceId)).collect(Collectors.toList());
+                    return new RestResult<>(collect);
+                }
+
+                return new RestResult<>(deviceMsgDos);
             }
 
             HashMap<String, Object> empowerPar = new HashMap<>();
@@ -72,9 +79,14 @@ public class DeviceMsgController {
                 List<DeviceMsgDo> deviceMsgDos = new ArrayList<>(deviceMsgCache.getCache().values());
                 List<String> empDevices = empowers.stream().map(d -> d.getDeviceId()).collect(Collectors.toList());
                 List<DeviceMsgDo> collect = deviceMsgDos.stream().filter(d -> empDevices.contains(d.getDeviceId())).collect(Collectors.toList());
-                new RestResult<>(collect);
+                if (deviceId != null) {
+                    List<DeviceMsgDo> deviceMsgDoList = collect.stream().filter(d -> d.getDeviceId().equals(deviceId)).collect(Collectors.toList());
+                    return new RestResult<>(deviceMsgDoList);
+                }
+
+                return new RestResult<>(collect);
             }
-            return new RestResult();
+            return new RestResult(new ArrayList<>());
         } catch (Exception e) {
             return new RestResult("err:" + e.getMessage(), "10001");
         }
@@ -84,8 +96,6 @@ public class DeviceMsgController {
     @RequestMapping(value = "/getmsg", method = RequestMethod.GET)
     public RestResult<List<DeviceMsgDo>> getDeviceSate(
             @RequestParam(value = "deviceId", required = false) String deviceId,
-            @RequestParam(value = "authCode", required = false) String authCode,
-            @RequestParam(value = "orderId", required = false) String orderId,
             @RequestParam(value = "beginDate", required = false) Date beginDate,
             @RequestParam(value = "endDate", required = false) Date endDate
     ) {
@@ -94,13 +104,11 @@ public class DeviceMsgController {
 
             HashMap<String, Object> map = new HashMap();
             map.put("deviceId", deviceId);
-            map.put("authCode", authCode);
-            map.put("orderId", orderId);
             map.put("beginDate", beginDate);
             map.put("endDate", endDate);
 
             if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_ADMIN) {
-                new RestResult<>(deviceInfoService.select(map));
+               return new RestResult<>(deviceMsgService.select(map));
             }
 
             HashMap<String, Object> empowerPar = new HashMap<>();
@@ -111,9 +119,9 @@ public class DeviceMsgController {
                 List<String> empDevices = empowers.stream().map(d -> d.getDeviceId()).collect(Collectors.toList());
                 List<DeviceMsgDo> collect = deviceMsgDos.stream().filter(d -> empDevices.contains(d.getDeviceId())).collect(Collectors.toList());
 
-                new RestResult<>(collect);
+              return  new RestResult<>(collect);
             }
-            return new RestResult();
+            return new RestResult(new ArrayList<>());
         } catch (Exception e) {
             return new RestResult("err:" + e.getMessage(), "10001");
         }

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mapper.UsesLogMapper">
-    <resultMap id="BaseResultMap" type="com.model.UsesLogDo">
+<mapper namespace="com.mapper.UsePlanMapper">
+    <resultMap id="BaseResultMap" type="com.model.UsePlanDo">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="auth_code" jdbcType="VARCHAR" property="authCode"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="before_state" jdbcType="VARCHAR" property="beforeState"/>
+        <result column="after_state" jdbcType="VARCHAR" property="afterState"/>
         <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
         <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
         <result column="duration" jdbcType="INTEGER" property="duration"/>
+        <result column="real_duration" jdbcType="INTEGER" property="realDuration"/>
         <result column="cost" jdbcType="REAL" property="cost"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
     </resultMap>
     <sql id="Base_Column_List">
-     id,device_id,auth_code,order_id,duration,cost,create_date
+     id,device_id,before_state,after_state,account,order_id,duration,real_duration,cost,create_date
   </sql>
     <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
         select
@@ -27,8 +30,8 @@
             and device_id = #{deviceId,jdbcType=VARCHAR}
         </if>
 
-        <if test="authCode != null">
-            and auth_code = #{authCode,jdbcType=VARCHAR}
+        <if test="account != null">
+            and account = #{account,jdbcType=VARCHAR}
         </if>
         <if test="orderId != null">
             and order_id = #{orderId,jdbcType=VARCHAR}
@@ -45,31 +48,28 @@
         </choose>
 
 
-
     </select>
 
 
     <insert id="insert" parameterType="com.model.DeviceInfoDo">
-        insert into uses_log (device_id,auth_code,order_id,duration,cost,create_date)
+        insert into uses_log (device_id,account,order_id,before_state,after_state,duration,real_duration,cost,create_date)
         values (
-         #{deviceId,jdbcType=VARCHAR},
-        #{authCode,jdbcType=VARCHAR},
+        #{deviceId,jdbcType=VARCHAR},
+        #{account,jdbcType=VARCHAR},
         #{orderId,jdbcType=VARCHAR},
+        #{beforeState,jdbcType=VARCHAR},
+        #{afterState,jdbcType=VARCHAR},
         #{duration,jdbcType=INTEGER},
+        #{realDuration,jdbcType=INTEGER},
         #{cost,jdbcType=REAL},
         #{createDate,jdbcType=TIMESTAMP}
         )
     </insert>
 
 
-
-
-
-
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT * FROM uses_log
     </select>
-
 
 
 </mapper>
