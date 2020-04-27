@@ -24,10 +24,11 @@ public class UsePlanDo extends BaseModel {
     private String deviceId;
     private String orderId;
     private Integer duration;
-    private Integer realDuration;
+    private Integer realDuration = 0;
     private Float cost;
     private String beforeState;
     private String afterState;
+    private String state = "Not started";
 
 
 

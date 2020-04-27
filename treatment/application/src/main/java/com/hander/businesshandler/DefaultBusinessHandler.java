@@ -106,14 +106,7 @@ public class DefaultBusinessHandler implements BusinessHandler {
                 //返回状态
                 String state = (String) body.get("state");
                 if (state != null) {
-//                    if ("done".equals(state)) {
-//                        //删除缓存
-//                        UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
-//                        UsePlanDo us = usePlanCache.remove(deviceId);
-//                        //插入记录到DB
-//                        UsesLogService usesLogService = (UsesLogService) SpringUtil.getBean("usesLogService");
-//                        usesLogService.insert(us);
-//                    }
+
 
                 }
             } else {

@@ -17,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -129,9 +126,9 @@ public class DeviceController {
                 List<DeviceInfoDo> deviceInfoDos = deviceInfoService.select(map);
                 List<String> empDevices = empowers.stream().map(d -> d.getDeviceId()).collect(Collectors.toList());
                 List<DeviceInfoDo> collect = deviceInfoDos.stream().filter(d -> empDevices.contains(d.getDeviceId())).collect(Collectors.toList());
-                new RestResult<>(collect);
+              return   new RestResult<>(collect);
             }
-            return new RestResult();
+            return new RestResult(new ArrayList<>());
         } catch (Exception e) {
             return new RestResult("err:" + e.getMessage(), "10001");
         }

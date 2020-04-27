@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName AccountController
@@ -50,21 +52,60 @@ public class AccountController {
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public RestResult<List<AccountInfoDo>> get(
             @RequestParam(value = "account", required = false) String account,
-            @RequestParam(value = "tel", required = false) String tel
+            @RequestParam(value = "tel", required = false) String tel,
+            @RequestParam(value = "accountType", required = false) Integer accountType
     ) {
         try {
+
+            if (loginAccount.get().getAccountType() != DBConstantUnit.ACCOUNT_ADMIN) {
+              return   new RestResult<>("无权限","1234");
+            }
             HashMap<String, Object> map = new HashMap<>();
-            if (account != null) {
-                map.put("account", account);
+            map.put("account", account);
+            map.put("tel", tel);
+
+            List<AccountInfoDo> select = accountInfoService.select(map);
+            if (accountType != null){
+                List<AccountInfoDo> collect = select.stream().filter(d -> (d.getAccountType().intValue() == accountType.intValue() && d.getIsActivate())).collect(Collectors.toList());
+                return  new RestResult<>(collect);
             }
-            if (tel != null) {
-                map.put("tel", tel);
-            }
-            return new RestResult(accountInfoService.select(map));
+
+            return new RestResult(select);
         } catch (Exception e) {
             return new RestResult("err:" + e.getMessage(), "10001");
         }
     }
+
+
+    @RequestMapping(value = "/activate/get", method = RequestMethod.GET)
+    public RestResult<List<AccountInfoDo>> getActivate(
+            @RequestParam(value = "account", required = false) String account,
+            @RequestParam(value = "tel", required = false) String tel,
+            @RequestParam(value = "accountType", required = false) Integer accountType
+    ) {
+        try {
+
+            if (loginAccount.get().getAccountType() != DBConstantUnit.ACCOUNT_ADMIN) {
+                return   new RestResult<>("无权限","1234");
+            }
+
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("account", account);
+            map.put("tel", tel);
+
+            List<AccountInfoDo> select = accountInfoService.select(map);
+            if (accountType != null){
+                List<AccountInfoDo> collect = select.stream().filter(d -> (d.getAccountType().intValue() == accountType.intValue() && d.getIsActivate())).collect(Collectors.toList());
+                return  new RestResult<>(collect);
+            }
+
+            return new RestResult(select);
+        } catch (Exception e) {
+            return new RestResult("err:" + e.getMessage(), "10001");
+        }
+    }
+
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
@@ -82,18 +123,18 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = "/del", method = RequestMethod.POST)
-    public RestResult del(@RequestParam(value = "id") Integer id, @RequestParam(value = "account") String account) {
-        try {
-            if (loginAccount.get().getAccountType() != DBConstantUnit.ACCOUNT_ADMIN) {
-                accountInfoService.deleteByPrimary(id, account);
-                return new RestResult();
-            }
-            return new RestResult(SystemConstantUnit.PERMISSION ,"10001");
-        } catch (Exception e) {
-            return new RestResult("err:" + e.getMessage(), "10001");
-        }
-    }
+//    @RequestMapping(value = "/del", method = RequestMethod.POST)
+//    public RestResult del(@RequestParam(value = "id") Integer id, @RequestParam(value = "account") String account) {
+//        try {
+//            if (loginAccount.get().getAccountType() == DBConstantUnit.ACCOUNT_ADMIN) {
+//                accountInfoService.deleteByPrimary(id, account);
+//                return new RestResult();
+//            }
+//            return new RestResult(SystemConstantUnit.PERMISSION ,"10001");
+//        } catch (Exception e) {
+//            return new RestResult("err:" + e.getMessage(), "10001");
+//        }
+//    }
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
