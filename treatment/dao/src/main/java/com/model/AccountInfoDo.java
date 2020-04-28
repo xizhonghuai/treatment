@@ -27,7 +27,7 @@ public class AccountInfoDo extends BaseModel {
 //    create_date	dateTime
 
     private String account;
-    @JSONField(serialize=false)
+//    @JSONField(serialize=false)
     private String password;
     private Integer accountType;
     private String username;

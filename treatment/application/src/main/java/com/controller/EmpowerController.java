@@ -67,7 +67,7 @@ public class EmpowerController {
 
     @RequestMapping(value = "/unbind", method = RequestMethod.POST)
     public RestResult unbind(@RequestParam(value = "deviceId") String deviceId,
-                          @RequestParam(value = "account") String account) {
+                          @RequestParam(value = "authCode") String authCode) {
         try {
 
             AccountInfoDo accountInfoDo = loginAccount.get();
@@ -75,11 +75,8 @@ public class EmpowerController {
                 return new RestResult(SystemConstantUnit.PERMISSION, "10001");
             }
             HashMap map = new HashMap();
-            map.put("account", account);
-            List<AccountInfoDo> acs = accountInfoService.select(map);
-            EmpowerDo empowerDo = new EmpowerDo();
-            empowerDo.setAuthCode(acs.get(0).getAuthCode());
-            empowerDo.setDeviceId(deviceId);
+            map.put("authCode", authCode);
+            map.put("deviceId", deviceId);
             empowerService.deleteByPrimary(map);
             return new RestResult();
         } catch (Exception e) {

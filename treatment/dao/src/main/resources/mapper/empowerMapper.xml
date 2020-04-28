@@ -34,7 +34,7 @@
         insert into empower (device_id,auth_code)
         values (
         #{deviceId,jdbcType=VARCHAR},
-        #{authCode,jdbcType=VARCHAR},
+        #{authCode,jdbcType=VARCHAR}
         )
     </insert>
 

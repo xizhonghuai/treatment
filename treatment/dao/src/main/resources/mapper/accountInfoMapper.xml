@@ -96,8 +96,12 @@
             <if test="sex != null">
                 sex = #{sex,jdbcType=INTEGER},
             </if>
+
+            <if test="tel != null">
+                tel = #{tel,jdbcType=VARCHAR},
+            </if>
         </set>
-        where  account = #{account,jdbcType=VARCHAR},
+        where  account = #{account,jdbcType=VARCHAR}
     </update>
 
 

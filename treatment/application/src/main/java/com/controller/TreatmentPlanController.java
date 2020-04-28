@@ -128,8 +128,6 @@ public class TreatmentPlanController {
         try {
 
 
-
-
             UsePlanDo plan = usePlanCache.get(deviceId);
             plan.setAfterState(afterState);
             plan.setBeforeState(beforeState);

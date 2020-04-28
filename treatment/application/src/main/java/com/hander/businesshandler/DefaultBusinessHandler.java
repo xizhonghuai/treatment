@@ -56,18 +56,8 @@ public class DefaultBusinessHandler implements BusinessHandler {
                 UsePlanDo usePlanDo = usePlanCache.get(deviceId);
 
                 //返回数据
-                if (body.get("np") !=null  && usePlanDo != null){
-                    if (usePlanDo.getOrderId().equals((String) body.get("oid"))){
-
-
-
-
-
-                        //更新使用时长
-                        usePlanDo.setRealDuration((Integer) body.get("min"));
-                        usePlanCache.update(deviceId,usePlanDo);
-
-
+                if (body.get("np") != null && usePlanDo != null) {
+                    if (usePlanDo.getOrderId().equals((String) body.get("oid"))) {
                         DeviceMsgService deviceMsgService = (DeviceMsgService) SpringUtil.getBean("deviceMsgService");
                         DeviceMsgDo deviceMsgDo = new DeviceMsgDo();
                         deviceMsgDo.setDeviceId(deviceMsg.getId());
@@ -77,11 +67,8 @@ public class DefaultBusinessHandler implements BusinessHandler {
                         deviceMsgDo.setAuthCode(usePlanDo.getAuthCode());
                         //数据入库
                         deviceMsgService.insert(deviceMsgDo);
-
                         //更新缓存
-                        deviceMsgCache.update(deviceId,deviceMsgDo);
-
-
+                        deviceMsgCache.update(deviceId, deviceMsgDo);
                     }
                 }
 
@@ -103,27 +90,32 @@ public class DefaultBusinessHandler implements BusinessHandler {
                 }
 
 
-                //返回状态
+                //更新状态
                 String state = (String) body.get("state");
                 if (state != null) {
-
-
+                    usePlanDo.setState(state);
+                    usePlanCache.update(deviceId, usePlanDo);
                 }
-            } else {
+
+                //更新使用时长
+                Integer min = (Integer) body.get("min");
+                if (min != null) {
+                    usePlanDo.setRealDuration(min);
+                    usePlanCache.update(deviceId, usePlanDo);
+                }
 
 
             }
 
-
-
+            //回复心跳
+            iotSession.sendMsg(JSON.toJSONString(new DeviceMessage(iotSession.getDeviceId())));
 
         } catch (Exception e) {
             log.info(e.toString());
             e.printStackTrace();
 
         }
-        //回复心跳
-        iotSession.sendMsg(JSON.toJSONString(new DeviceMessage(iotSession.getDeviceId())));
+
     }
 
     @Override

@@ -21,6 +21,15 @@ public class MvcInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String url = request.getRequestURI();
         System.out.println(url);
+        if ("/".equals(url)){
+            response.sendRedirect("http://39.98.164.168:8080/");
+        }
+
+
+
+
+
+
         if (url.indexOf("/api/account/reg")>0){
             return true;
         }
@@ -46,11 +55,14 @@ public class MvcInterceptor implements HandlerInterceptor {
 
 
 
+
+
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+
 
         AuthContext.get().clear();
     }
