@@ -1,6 +1,7 @@
 package com.service;
 
 import com.Dao;
+import com.alibaba.fastjson.JSON;
 import com.common.DaoBeans;
 import com.mapper.BaseMapper;
 import org.apache.ibatis.session.SqlSession;
@@ -42,6 +43,7 @@ public class BaseService<Mapper, Model> {
     }
 
     public List<Model> select(HashMap<String, Object> map) {
+        System.out.println("select sql par:"+ JSON.toJSON(map));
         Dao dao = (Dao) DaoBeans.getBean("dao");
         SqlSession sqlSession = dao.getSqlSessionFactory().openSession();
         BaseMapper baseMapper = (BaseMapper) sqlSession.getMapper(mapperClass);

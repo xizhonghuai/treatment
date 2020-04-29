@@ -39,7 +39,7 @@
 
         <choose>
             <when test="beginDate == null  or  endDate == null">
-                AND create_date &gt; date_sub(now(), interval 12 hour)
+--                 AND create_date &gt; date_sub(now(), interval 12 hour)
             </when>
             <otherwise>
                 AND create_date &gt;= #{beginDate,jdbcType=TIMESTAMP}

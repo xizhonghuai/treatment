@@ -22,14 +22,9 @@ public class MvcInterceptor implements HandlerInterceptor {
         String url = request.getRequestURI();
         System.out.println(url);
         if ("/".equals(url)){
-            response.sendRedirect("http://39.98.164.168:8080/");
+            response.sendRedirect("http://39.98.164.168:8080/treaweb/webmis/login.html");
+            return false;
         }
-
-
-
-
-
-
         if (url.indexOf("/api/account/reg")>0){
             return true;
         }
@@ -41,6 +36,8 @@ public class MvcInterceptor implements HandlerInterceptor {
         if (url.indexOf("/api/debug")>0){
             return true;
         }
+
+
 
         AccountInfoDo accountInfoDo = new AccountInfoDo();
         accountInfoDo.setAccount("admin");

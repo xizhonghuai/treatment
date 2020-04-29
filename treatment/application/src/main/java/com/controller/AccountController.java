@@ -180,9 +180,9 @@ public class AccountController {
                 AccountInfoDo token = as.get(0);
                 if (token.getPassword().equals(password)) {
                     request.getSession().setAttribute("token", token);
-                    new RestResult<>();
+                   return new RestResult<>();
                 } else {
-                    new RestResult<>("密码错误", "1001");
+                  return   new RestResult<>("密码错误", "1001");
                 }
             }
             return new RestResult("用户未注册", "10001");
