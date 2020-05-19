@@ -6,13 +6,19 @@ import com.config.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.cache.UsePlanCache;
 import com.entity.DeviceMessage;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.model.DeviceMsgDo;
 import com.model.UsePlanDo;
 import com.service.DeviceMsgService;
 import com.transmission.business.BusinessHandler;
+import com.transmission.server.core.AbstractBootServer;
 import com.transmission.server.core.IotSession;
+import com.transmission.server.core.ServerUtils;
+import com.transmission.server.core.WriteMsgUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.mina.core.session.IoSession;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,21 +48,22 @@ public class DefaultBusinessHandler implements BusinessHandler {
         log.info("rec : {}", message.toString());
         try {
             DeviceMessage deviceMsg = JSON.parseObject(message.toString(), DeviceMessage.class);
+
             if (iotSession.getDeviceId() == null || !deviceMsg.getId().equals(iotSession.getDeviceId())) {
                 iotSession.setDeviceId(deviceMsg.getId());
             }
 
             String deviceId = iotSession.getDeviceId();
-
             HashMap<String, Object> body = deviceMsg.getBody();
-            if (body != null) {
 
-                UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
-                DeviceMsgCache deviceMsgCache = (DeviceMsgCache) SpringUtil.getBean("deviceMsgCache");
-                UsePlanDo usePlanDo = usePlanCache.get(deviceId);
+            UsePlanCache usePlanCache = (UsePlanCache) SpringUtil.getBean("usePlanCache");
+            DeviceMsgCache deviceMsgCache = (DeviceMsgCache) SpringUtil.getBean("deviceMsgCache");
+            UsePlanDo usePlanDo = usePlanCache.get(deviceId);
 
-                //返回数据
-                if (body.get("np") != null && usePlanDo != null) {
+            if (body != null && usePlanDo != null) {
+
+                //接收数据
+                if (body.get("np") != null) {
                     if (usePlanDo.getOrderId().equals((String) body.get("oid"))) {
                         DeviceMsgService deviceMsgService = (DeviceMsgService) SpringUtil.getBean("deviceMsgService");
                         DeviceMsgDo deviceMsgDo = new DeviceMsgDo();
@@ -72,40 +79,60 @@ public class DefaultBusinessHandler implements BusinessHandler {
                     }
                 }
 
-                //请求uid oid min
-                List<String> pulls = (List<String>) body.get("pull");
-                if (pulls != null && pulls.contains("uid")) {
-
-                    DeviceMessage ack = new DeviceMessage(deviceId);
-                    HashMap<String, Object> bodyMap = new HashMap<>();
-                    UsePlanDo usesLogDo = usePlanCache.get(deviceId);
-                    if (usesLogDo != null) {
-                        bodyMap.put("oid", usesLogDo.getOrderId());
-                        bodyMap.put("uid", usesLogDo.getAuthCode());
-                        bodyMap.put("min", usesLogDo.getDuration());
-                    }
-                    ack.setBody(bodyMap);
-                    //返回uid、oid、min
-                    iotSession.sendMsg(JSON.toJSONString(ack));
-                }
-
-
                 //更新状态
                 String state = (String) body.get("state");
                 if (state != null) {
+
                     usePlanDo.setState(state);
                     usePlanCache.update(deviceId, usePlanDo);
+
                 }
 
                 //更新使用时长
                 Integer min = (Integer) body.get("min");
                 if (min != null) {
+
+//
+//                    if (min>usePlanDo.getDuration()){
+//
+//                        usePlanDo.setRealDuration(usePlanDo.getDuration());
+//                        usePlanDo.setState("done");
+//                        //下发停止指令
+//                        HashMap<String,Object> cmd = new HashMap<>();
+//                        cmd.put("id",deviceId);
+//                        cmd.put("ctrl","stop");
+//                        cmd.put("date",new Date());
+//                        iotSession.sendMsg(JSON.toJSONString(cmd));
+//
+//                    }
+
                     usePlanDo.setRealDuration(min);
                     usePlanCache.update(deviceId, usePlanDo);
+
+
+                }
+
+
+                //请求uid oid min
+                List<String> pulls = (List<String>) body.get("pull");
+                if (pulls != null && pulls.contains("uid")) {
+                    UsePlanDo usesLogDo = usePlanCache.get(deviceId);
+                    HashMap<String, Object> ack = new HashMap<>();
+                    ack.put("id", deviceId);
+                    ack.put("date", new Date());
+                    if (usesLogDo != null) {
+                        ack.put("oid", usesLogDo.getOrderId());
+                        ack.put("uid", usesLogDo.getAuthCode());
+                        ack.put("min", usesLogDo.getDuration());
+                    }
+                    //返回uid、oid、min
+                    iotSession.sendMsg(JSON.toJSONString(ack));
+                    return;
                 }
 
 
             }
+
 
             //回复心跳
             iotSession.sendMsg(JSON.toJSONString(new DeviceMessage(iotSession.getDeviceId())));

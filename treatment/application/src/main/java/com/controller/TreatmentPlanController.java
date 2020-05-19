@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cache.UsePlanCache;
 import com.common.DBConstantUnit;
 import com.config.LoginAccount;
@@ -10,12 +11,17 @@ import com.model.UsePlanDo;
 import com.service.AccountInfoService;
 import com.service.EmpowerService;
 import com.service.UsePlanService;
+import com.transmission.server.core.AbstractBootServer;
+import com.transmission.server.core.ServerUtils;
+import com.transmission.server.core.WriteMsgUtils;
 import lib.RestResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,7 +46,6 @@ public class TreatmentPlanController {
     private AccountInfoService accountInfoService;
 
 
-
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public RestResult add(
             @RequestParam(value = "account") String account,
@@ -60,11 +65,12 @@ public class TreatmentPlanController {
                 return new RestResult("设备使用中", "10000");
             }
 
-            HashMap<String,Object> map = new HashMap<>();
-            map.put("account",account);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("account", account);
             List<AccountInfoDo> accountInfoDos = accountInfoService.select(map);
-            if (accountInfoDos.size()<=0){
-               return new RestResult<>("请先添加客户资料","5555");
+            if (accountInfoDos.size() <= 0 && accountInfoDos.get(0).getAccountType() != DBConstantUnit.ACCOUNT_USER ) {
+
+                return new RestResult<>("请先添加客户资料", "5555");
             }
 
             if (accountInfoDo.getAccountType() == DBConstantUnit.ACCOUNT_ADMIN) {
@@ -104,16 +110,35 @@ public class TreatmentPlanController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public RestResult<List<UsePlanDo>> get(
-            @RequestParam(value = "deviceId",required = false) String deviceId
-    ){
-        if (deviceId != null ){
-            List<UsePlanDo> usesLogDos = new ArrayList<>();
-            if (usePlanCache.get(deviceId) != null){
-                usesLogDos.add(usePlanCache.get(deviceId));
+            @RequestParam(value = "deviceId", required = false) String deviceId
+
+    ) {
+
+        try {
+
+
+            AccountInfoDo ac = loginAccount.get();
+            if (ac.getAccountType() == DBConstantUnit.ACCOUNT_USER) {
+                List<UsePlanDo> usesLogDos = new ArrayList<>(usePlanCache.getCache().values());
+                List<UsePlanDo> collect = usesLogDos.stream().filter(d -> d.getAccount().equals(ac.getAccount())).collect(Collectors.toList());
+                return new RestResult<>(collect);
             }
-            return new RestResult<>(usesLogDos);
+
+            if (deviceId != null) {
+                List<UsePlanDo> usesLogDos = new ArrayList<>();
+                if (usePlanCache.get(deviceId) != null) {
+                    usesLogDos.add(usePlanCache.get(deviceId));
+                }
+                return new RestResult<>(usesLogDos);
+            }
+
+            return new RestResult<>(new ArrayList<>(usePlanCache.getCache().values()));
+
+
+        } catch (Exception e) {
+            return new RestResult<>("err", "4555");
         }
-        return  new RestResult<>(new ArrayList<>(usePlanCache.getCache().values()));
+
     }
 
 
@@ -123,8 +148,7 @@ public class TreatmentPlanController {
             @RequestParam(value = "beforeState") String beforeState,
             @RequestParam(value = "afterState") String afterState
 
-    )
-    {
+    ) {
         try {
 
 
@@ -134,10 +158,24 @@ public class TreatmentPlanController {
             //插入记录到DB
             usePlanService.insert(plan);
             usePlanCache.remove(deviceId);
+
+            //下发停止指令
+            HashMap<String,Object> cmd = new HashMap<>();
+            cmd.put("id",deviceId);
+            cmd.put("ctrl","stop");
+            cmd.put("date",new Date());
+            AbstractBootServer server = (AbstractBootServer) ServerUtils.getServer("treatment");
+            if (server != null){
+                IoSession ioSession = WriteMsgUtils.regIdToSession(server.getManagedSessions(), deviceId);
+                if (ioSession != null){
+                    ioSession.write(JSON.toJSON(cmd));
+                }
+            }
+
             return new RestResult();
 
         } catch (Exception e) {
-           return new RestResult<>(e.getMessage(), "655555");
+            return new RestResult<>(e.getMessage(), "655555");
         }
 
     }

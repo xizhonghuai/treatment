@@ -25,14 +25,11 @@ import java.util.Arrays;
 public class Initialization {
 
 
-    @Value("${sysConf.resourcePath}")
-    private String resourcePath;
+    @Value("${sysConf.webHost}")
+    private String webHost;
 
-    @Value("${sysConf.handlerJarFileBasePath}")
-    private String handlerJarFileBasePath;
-
-    @Value("${sysConf.decodePluginBasePath}")
-    private String decodePluginBasePath;
+    @Value("${sysConf.webUserHost}")
+    private String webUserHost;
 
     @Value("${sysConf.defaultServerPort}")
     private Integer defaultServerPort;
@@ -40,8 +37,8 @@ public class Initialization {
     @Value("${sysConf.debugPort}")
     private Integer debugPort;
 
-
-
+    public static String webUrl;
+    public static String webUserUrl;
 
 
     @Autowired
@@ -63,7 +60,6 @@ public class Initialization {
             //数据库初始化
             dao.init();
 
-
             //todo 启动服务
             BootServerParameter bootServerParameter = new BootServerParameter();
             bootServerParameter.setServerName("YX-Cloud-Iot");
@@ -79,6 +75,9 @@ public class Initialization {
                 e.printStackTrace();
                 log.error(e.toString());
             }
+
+            webUrl = webHost;
+            webUserUrl = webUserHost;
 
         }catch (Exception e){
             e.printStackTrace();

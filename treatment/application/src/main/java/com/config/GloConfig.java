@@ -23,6 +23,8 @@ import javax.servlet.MultipartConfigElement;
 public class GloConfig {
 
 
+
+
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();

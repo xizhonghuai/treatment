@@ -2,17 +2,24 @@ package com.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cache.TokenManager;
 import com.common.DBConstantUnit;
 import com.config.LoginAccount;
 import com.config.SystemConstantUnit;
+import com.init.Initialization;
 import com.model.AccountInfoDo;
 import com.service.AccountInfoService;
 import lib.RestResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -171,25 +178,55 @@ public class AccountController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public RestResult login(HttpServletRequest request, @RequestParam(value = "account") String account, @RequestParam(value = "password") String password) {
+    public RestResult<AccountInfoDo> login(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "account") String account, @RequestParam(value = "password") String password) {
         try {
             HashMap<String, Object> map = new HashMap<>();
             map.put("account", account);
             List<AccountInfoDo> as = accountInfoService.select(map);
             if (as != null && as.size() > 0) {
-                AccountInfoDo token = as.get(0);
-                if (token.getPassword().equals(password)) {
-                    request.getSession().setAttribute("token", token);
-                   return new RestResult<>();
+                AccountInfoDo accountInfoDo = as.get(0);
+                if (accountInfoDo.getPassword().equals(password)) {
+                    request.getSession().setAttribute("token", accountInfoDo);
+                    String token = TokenManager.generateToken();
+                    TokenManager.saveAccountTOkenInfo(token, accountInfoDo);
+                    accountInfoDo.setToken(token);
+                    accountInfoDo.setPassword(null);
+
+                    return new RestResult<>(accountInfoDo);
+
                 } else {
-                  return   new RestResult<>("密码错误", "1001");
+                    return   new RestResult<>("密码错误", "1001");
                 }
             }
-            return new RestResult("用户未注册", "10001");
+            return new RestResult("用户未注册", "1002");
         } catch (Exception e) {
-            return new RestResult("err:" + e.getMessage(), "10001");
+            return new RestResult("err:" + e.getMessage(), "1003");
         }
     }
+
+
+
+
+
+
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public RestResult<AccountInfoDo> user(@RequestParam(value = "authCode") String authCode) {
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("authCode", authCode);
+            List<AccountInfoDo> as = accountInfoService.select(map);
+            if (as != null && as.size() > 0) {
+                AccountInfoDo token = as.get(0);
+                token.setPassword(null);
+                return new RestResult<>(token);
+            }
+            return new RestResult("用户未注册", "1002");
+        } catch (Exception e) {
+            return new RestResult("err:" + e.getMessage(), "1003");
+        }
+    }
+
 
 
 }

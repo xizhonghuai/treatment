@@ -37,6 +37,7 @@ public class AccountInfoDo extends BaseModel {
     private Integer age;
     private String address;
     private Boolean isActivate;
+    private String token;
 
 
 

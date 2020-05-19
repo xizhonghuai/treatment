@@ -3,9 +3,8 @@ server:
 
 
 sysConf:
-  handlerJarFileBasePath: C:\yxcloud\handlers
-  decodePluginBasePath: C:\yxcloud\decodeplugins
-  resourcePath: C:\yxcloud\resources
+  webHost: http://cs.kabanjiankang.com:8080
+  webUserHost: http://192.168.0.106:8080
   debugPort: 8088
   defaultServerPort: 8089
 

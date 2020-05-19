@@ -27,7 +27,7 @@ public class UsePlanCache {
 
     public void update(String deviceId,UsePlanDo usesLogDo){
         cache.remove(deviceId);
-        add(deviceId,usesLogDo);
+        cache.put(deviceId,usesLogDo);
     }
 
     public UsePlanDo remove(String deviceId){
