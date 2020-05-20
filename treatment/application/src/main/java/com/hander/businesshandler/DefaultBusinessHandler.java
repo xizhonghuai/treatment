@@ -61,7 +61,6 @@ public class DefaultBusinessHandler implements BusinessHandler {
             UsePlanDo usePlanDo = usePlanCache.get(deviceId);
 
             if (body != null && usePlanDo != null) {
-
                 //接收数据
                 if (body.get("np") != null) {
                     if (usePlanDo.getOrderId().equals((String) body.get("oid"))) {
@@ -72,44 +71,29 @@ public class DefaultBusinessHandler implements BusinessHandler {
                         deviceMsgDo.setSerialId((Integer) body.get("sid"));
                         deviceMsgDo.setMsgBody(JSON.toJSONString(body));
                         deviceMsgDo.setAuthCode(usePlanDo.getAuthCode());
+
+
+                        //更新状态
+                        String state = (String) body.get("state");
+                        if (state != null) {
+                            usePlanDo.setState(state);
+                            usePlanCache.update(deviceId, usePlanDo);
+                        }
+
+
+                        //更新使用时长
+                        Integer min = (Integer) body.get("min");
+                        if (min != null) {
+                            usePlanDo.setRealDuration(min);
+                            usePlanCache.update(deviceId, usePlanDo);
+                        }
+
+
                         //数据入库
                         deviceMsgService.insert(deviceMsgDo);
                         //更新缓存
                         deviceMsgCache.update(deviceId, deviceMsgDo);
                     }
-                }
-
-                //更新状态
-                String state = (String) body.get("state");
-                if (state != null) {
-
-                    usePlanDo.setState(state);
-                    usePlanCache.update(deviceId, usePlanDo);
-
-                }
-
-                //更新使用时长
-                Integer min = (Integer) body.get("min");
-                if (min != null) {
-
-//
-//                    if (min>usePlanDo.getDuration()){
-//
-//                        usePlanDo.setRealDuration(usePlanDo.getDuration());
-//                        usePlanDo.setState("done");
-//                        //下发停止指令
-//                        HashMap<String,Object> cmd = new HashMap<>();
-//                        cmd.put("id",deviceId);
-//                        cmd.put("ctrl","stop");
-//                        cmd.put("date",new Date());
-//                        iotSession.sendMsg(JSON.toJSONString(cmd));
-//
-//                    }
-
-                    usePlanDo.setRealDuration(min);
-                    usePlanCache.update(deviceId, usePlanDo);
-
-
                 }
 
 
