@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.debug.DeviceDebug;
 import com.transmission.server.core.AbstractBootServer;
 import com.transmission.server.core.ServerUtils;
@@ -10,6 +11,8 @@ import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -53,6 +56,19 @@ public class DeviceDebugController {
         deviceDebug.disconnect(serviceId, regId);
         return new RestResult();
     }
+
+
+    @RequestMapping(value = "/lbs", method = RequestMethod.POST)
+    public RestResult lbs(@RequestParam("serviceId") String serviceId, @RequestParam("regId") String regId) {
+        deviceDebug.disconnect(serviceId, regId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id",regId);
+        map.put("ctrl","lbs");
+        map.put("date",new Date());
+        deviceDebug.sendCmd(serviceId,regId, JSON.toJSONString(map));
+        return new RestResult();
+    }
+
 
 
 
