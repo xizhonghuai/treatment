@@ -1,5 +1,6 @@
 package com.hander;
 
+import com.alibaba.fastjson.JSON;
 import com.msgpush.MessagePush;
 import com.transmission.business.BusinessHandler;
 import com.transmission.business.Handler;
@@ -65,7 +66,7 @@ public class InterceptHandler extends Handler {
         IotSession iotSession = new IotSession(session, serviceId, connectType);
         businessHandler.messageReceived(iotSession, message);
         MessagePush messagePush = new WebSocketPush();
-        messagePush.push(message.toString());
+        messagePush.push(message);
 //        iotSession.updateActivityTime();//更新活动时间
     }
 }

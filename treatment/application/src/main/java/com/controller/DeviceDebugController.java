@@ -60,7 +60,7 @@ public class DeviceDebugController {
 
     @RequestMapping(value = "/lbs", method = RequestMethod.POST)
     public RestResult lbs(@RequestParam("serviceId") String serviceId, @RequestParam("regId") String regId) {
-        deviceDebug.disconnect(serviceId, regId);
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("id",regId);
         map.put("ctrl","lbs");
