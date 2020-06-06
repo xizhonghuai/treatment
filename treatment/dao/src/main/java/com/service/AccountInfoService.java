@@ -1,7 +1,12 @@
 package com.service;
 
+import com.Dao;
+import com.common.DaoBeans;
 import com.mapper.AccountInfoMapper;
 import com.model.AccountInfoDo;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,6 +22,9 @@ import java.util.HashMap;
 public class AccountInfoService extends BaseService<AccountInfoMapper, AccountInfoDo> {
 
 
+    @Autowired
+    private Dao dao;
+
     public void deleteByPrimary(Integer id, String account) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("isActivate", false);
@@ -24,6 +32,11 @@ public class AccountInfoService extends BaseService<AccountInfoMapper, AccountIn
         map.put("account", account);
         updateByPrimary(map);
     }
+
+   /* 数组 长度N  不重复    VALUE <  M*/
+
+
+
 
 
 }

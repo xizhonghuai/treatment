@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.yx.cloud.iot:common:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://F:/repository/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://F:/repository/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT-sources.jar!/" />
+      <root url="jar://F:/repository/com/yx/cloud/iot/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

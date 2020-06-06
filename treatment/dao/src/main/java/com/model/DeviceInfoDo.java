@@ -34,6 +34,7 @@ public class DeviceInfoDo extends BaseModel {
     private String nurse;
     private String tel;
     private String dtuId;
+//    private String password;
 
     private String ranCityName;
 

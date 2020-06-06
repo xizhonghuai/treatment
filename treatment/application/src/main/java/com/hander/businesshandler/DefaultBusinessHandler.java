@@ -60,7 +60,7 @@ public class DefaultBusinessHandler implements BusinessHandler {
             DeviceMsgCache deviceMsgCache = (DeviceMsgCache) SpringUtil.getBean("deviceMsgCache");
             UsePlanDo usePlanDo = usePlanCache.get(deviceId);
 
-            if (body != null && usePlanDo != null) {
+            if (body != null && usePlanDo != null && !"done".equals(usePlanDo.getState())) {
                 //接收数据
                 if (body.get("np") != null) {
                     if (usePlanDo.getOrderId().equals((String) body.get("oid"))) {
@@ -107,6 +107,9 @@ public class DefaultBusinessHandler implements BusinessHandler {
                     if (usesLogDo != null) {
                         ack.put("oid", usesLogDo.getOrderId());
                         ack.put("uid", usesLogDo.getAuthCode());
+                        if (usePlanDo.getRealDuration()>0){
+                            usesLogDo.setDuration(usePlanDo.getRealDuration());
+                        }
                         ack.put("min", usesLogDo.getDuration());
                     }
                     //返回uid、oid、min

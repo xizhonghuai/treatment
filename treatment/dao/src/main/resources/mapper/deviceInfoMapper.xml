@@ -13,6 +13,7 @@
         <result column="tel" jdbcType="VARCHAR" property="tel"/>
         <result column="dtu_id" jdbcType="VARCHAR" property="dtuId"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+     <!--   <result column="password" jdbcType="VARCHAR" property="password"/>-->
     </resultMap>
     <sql id="Base_Column_List">
      id,device_id,device_name,city_id,address,longitude,latitude,nurse,tel,dtu_id,create_date
@@ -55,6 +56,7 @@
         #{tel,jdbcType=VARCHAR},
         #{dtuId,jdbcType=VARCHAR},
         #{createDate,jdbcType=TIMESTAMP}
+
         )
     </insert>
 
@@ -88,6 +90,8 @@
             <if test="dtuId != null">
                 dtu_id = #{dtuId,jdbcType=VARCHAR},
             </if>
+
+
 
         </set>
         where device_id = #{deviceId,jdbcType=VARCHAR}

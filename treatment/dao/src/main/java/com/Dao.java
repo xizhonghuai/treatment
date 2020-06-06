@@ -4,6 +4,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.session.SqlSessionManager;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.springframework.stereotype.Component;
 
@@ -33,14 +34,15 @@ public class Dao {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//        sqlSessionFactory = SqlSessionManager.newInstance(inputStream);
         inputStream.close();
         resource = null;
     }
 
-    public void init(Configuration config){
 
-        sqlSessionFactory = new DefaultSqlSessionFactory(config);
-    }
+
+
+
 
 
 

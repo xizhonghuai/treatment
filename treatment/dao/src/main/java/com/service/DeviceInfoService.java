@@ -1,7 +1,12 @@
 package com.service;
 
+import com.Dao;
 import com.mapper.DeviceInfoMapper;
+import com.mapper.DeviceMsgMapper;
 import com.model.DeviceInfoDo;
+import com.model.DeviceMsgDo;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,4 +18,11 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class DeviceInfoService extends BaseService<DeviceInfoMapper,DeviceInfoDo> {
+
+
+
+
+
+
+
 }

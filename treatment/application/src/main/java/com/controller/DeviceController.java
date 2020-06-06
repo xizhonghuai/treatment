@@ -53,6 +53,7 @@ public class DeviceController {
             if (accountInfoDo.getAccountType() != DBConstantUnit.ACCOUNT_ADMIN) {
                 return new RestResult(SystemConstantUnit.PERMISSION, "10001");
             }
+//            deviceInfoDo.setPassword("9999");//设备进入测试 默认密码
             deviceInfoService.insert(deviceInfoDo);
             return new RestResult();
         } catch (Exception e) {
@@ -133,6 +134,9 @@ public class DeviceController {
             return new RestResult("err:" + e.getMessage(), "10001");
         }
     }
+
+
+
 
 
 

@@ -1,5 +1,13 @@
 package com;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Function;
+
 /**
  * @ClassName CodeTest
  * @Description: TODO
@@ -9,21 +17,27 @@ package com;
  **/
 public abstract class CodeTest {
 
+    /*
+    * 生成数组：长度L，不重复，最大值不大于M
+    * */
+
+ /*   private List<Integer> getArray(int len,int)*/
+
+
+
     public static void main(String[] args) {
 
-        StringBuilder stringBuffer = new StringBuilder();
 
-        stringBuffer.append("<div class=\"progress\">");
-        stringBuffer.append("<div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"60\"");
-        stringBuffer.append(" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " + 30 + "%;\">");
-        // stringBuffer.append(" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 40%;\">");
-        stringBuffer.append("<span class=\"sr-only\">40% 完成</span> ");
-        stringBuffer.append("</div>");
-        stringBuffer.append(" </div>");
-        stringBuffer.append("");
-        stringBuffer.append("");
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        treeSet.add(1);
+        treeSet.add(2);
+        System.out.println(">= 3: " + treeSet.ceiling(3));
+        System.out.println(">= 2: " + treeSet.ceiling(2));
 
-        System.out.println(stringBuffer.toString());
+        //
+
+
+
 
 
     }

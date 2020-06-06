@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.Dao;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.common.DBConstantUnit;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -106,6 +108,10 @@ public class TreatmentDataController {
                     treatmentData.getTp().addAll(tp);
 
                 });
+
+                treatmentData.setNp(getMapList(treatmentData.getNp()));
+                treatmentData.setTp(getMapList(treatmentData.getTp()));
+                treatmentData.setEc(getMapList(treatmentData.getEc()));
 
                 return new RestResult<>(treatmentData);
             }
@@ -209,6 +215,43 @@ public class TreatmentDataController {
         } catch (Exception e) {
             return new RestResult("err:" + e.getMessage(), "10001");
         }
+    }
+
+
+
+    private  List<Float> getMapList(List<Float> list){
+        if (list.size() > 800){
+            int group = list.size()/800;
+            int index = 0;
+            List<Float> result = new ArrayList<>();
+            Double sum = 0d;
+            for (int i = 0; i < list.size(); i++) {
+                index++;
+                sum += list.get(i);
+                if (index == group || i == list.size() - 1) {
+                    result.add(new BigDecimal(String.valueOf(sum / index)).setScale(1, BigDecimal.ROUND_DOWN).floatValue());
+                    sum = 0d;
+                    index = 0;
+                }
+
+            }
+            return result;
+        }
+
+        return list;
+    }
+
+
+    public static void main(String[] args) {
+
+
+        TreatmentDataController treatmentDataController = new TreatmentDataController();
+
+        RestResult<TreatmentData> treatmentData = treatmentDataController.getTreatmentData("695e4199-0a77-4ef1-9f25-ab92129c134e");
+
+        System.out.println(treatmentData.getData());
+
+
     }
 
 }
