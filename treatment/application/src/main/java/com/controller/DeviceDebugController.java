@@ -37,7 +37,7 @@ public class DeviceDebugController {
 
 
 
-    @RequestMapping(value = "/sendCmd", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendCmd", produces = {"application/json;charset=UTF-8"},method ={RequestMethod.POST,RequestMethod.GET})
     public RestResult sendCmd(@RequestParam("serviceId") String serviceId, @RequestParam("regId") String regId, @RequestParam("cmd") String cmd) {
         AbstractBootServer server = (AbstractBootServer) ServerUtils.getServer(serviceId);
         if (server == null){
@@ -45,9 +45,17 @@ public class DeviceDebugController {
         }
         IoSession ioSession = WriteMsgUtils.regIdToSession(server.getManagedSessions(), regId);
         if (ioSession == null){
+            if ("9999".equals(regId)){
+                return new RestResult("设备不在线，请检查是否联网","1233");
+            }
             return new RestResult("设备已离线","1233");
         }
         ioSession.write(cmd);
+        if ("9999".equals(regId)){
+            RestResult restResult = new RestResult();
+            restResult.setData("正在开锁中...");
+            return restResult;
+        }
         return new RestResult();
     }
 

@@ -40,6 +40,10 @@ public class MvcInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (url.indexOf("api/debug/") > 0) {
+            return true;
+        }
+
         try {
             String token = null;
             token = request.getParameter("token");

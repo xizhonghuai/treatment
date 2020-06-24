@@ -12,11 +12,12 @@
         <result column="nurse" jdbcType="VARCHAR" property="nurse"/>
         <result column="tel" jdbcType="VARCHAR" property="tel"/>
         <result column="dtu_id" jdbcType="VARCHAR" property="dtuId"/>
+        <result column="imei" jdbcType="VARCHAR" property="imei"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
      <!--   <result column="password" jdbcType="VARCHAR" property="password"/>-->
     </resultMap>
     <sql id="Base_Column_List">
-     id,device_id,device_name,city_id,address,longitude,latitude,nurse,tel,dtu_id,create_date
+     id,device_id,device_name,city_id,address,longitude,latitude,nurse,tel,dtu_id,imei,create_date
   </sql>
     <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
         select
@@ -44,7 +45,7 @@
 
 
     <insert id="insert" parameterType="com.model.DeviceInfoDo">
-        insert into device_info (device_id,device_name,city_id,address,longitude,latitude,nurse,tel,dtu_id,create_date)
+        insert into device_info (device_id,device_name,city_id,address,longitude,latitude,nurse,tel,dtu_id,imei,create_date)
         values (
         #{deviceId,jdbcType=VARCHAR},
         #{deviceName,jdbcType=VARCHAR},
@@ -55,6 +56,7 @@
         #{nurse,jdbcType=VARCHAR},
         #{tel,jdbcType=VARCHAR},
         #{dtuId,jdbcType=VARCHAR},
+        #{imei,jdbcType=VARCHAR},
         #{createDate,jdbcType=TIMESTAMP}
 
         )
@@ -89,6 +91,10 @@
 
             <if test="dtuId != null">
                 dtu_id = #{dtuId,jdbcType=VARCHAR},
+            </if>
+
+            <if test="imei != null">
+                imei = #{imei,jdbcType=VARCHAR},
             </if>
 
 

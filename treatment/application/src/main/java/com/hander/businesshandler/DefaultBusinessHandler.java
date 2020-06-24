@@ -7,8 +7,10 @@ import com.alibaba.fastjson.JSON;
 import com.cache.UsePlanCache;
 import com.entity.DeviceMessage;
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
+import com.model.DeviceInfoDo;
 import com.model.DeviceMsgDo;
 import com.model.UsePlanDo;
+import com.service.DeviceInfoService;
 import com.service.DeviceMsgService;
 import com.transmission.business.BusinessHandler;
 import com.transmission.server.core.AbstractBootServer;
@@ -47,10 +49,48 @@ public class DefaultBusinessHandler implements BusinessHandler {
     public void messageReceived(IotSession iotSession, Object message) {
         log.info("rec : {}", message.toString());
         try {
+
+            //售货机演示
+            String rec = message.toString();
+            if ("9999".equals(rec)){
+                if (iotSession.getDeviceId() == null ) {
+                    log.info("售货机演示设备注册");
+                    iotSession.setDeviceId("9999");
+                }
+                log.info("售货机演示设备心跳");
+                iotSession.sendMsg("ok");
+                return;
+            }
+            //////////////////////////////////////
+
+
             DeviceMessage deviceMsg = JSON.parseObject(message.toString(), DeviceMessage.class);
 
             if (iotSession.getDeviceId() == null || !deviceMsg.getId().equals(iotSession.getDeviceId())) {
                 iotSession.setDeviceId(deviceMsg.getId());
+                //基础信息自动入库
+                DeviceInfoService deviceInfoService = (DeviceInfoService) SpringUtil.getBean("deviceInfoService");
+                HashMap<String, Object> parMap = new HashMap<>();
+                parMap.put("deviceId",deviceMsg.getId());
+                List<DeviceInfoDo> select = deviceInfoService.select(parMap);
+                if (select.size() == 0 ){
+                    DeviceInfoDo deviceInfoDo = new DeviceInfoDo();
+                    deviceInfoDo.setDeviceId(deviceMsg.getId());
+                    deviceInfoDo.setDeviceName("测试设备_"+deviceMsg.getId());
+                    deviceInfoDo.setCityId(3);
+                    deviceInfoDo.setAddress("深圳");
+                    deviceInfoDo.setNurse("蕴芯科技");
+                    deviceInfoDo.setTel("136xxxxxxxx");
+                    if (deviceMsg.getBody() != null){
+                        String ccid = (String) deviceMsg.getBody().get("ccid");
+                        String imei = (String) deviceMsg.getBody().get("imei");
+                        deviceInfoDo.setDtuId(ccid);
+                        deviceInfoDo.setImei(imei);
+                    }
+                    deviceInfoService.insert(deviceInfoDo);
+                }
+
+
             }
 
             String deviceId = iotSession.getDeviceId();
