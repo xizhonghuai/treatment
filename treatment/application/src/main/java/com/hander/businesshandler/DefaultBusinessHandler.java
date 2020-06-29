@@ -52,8 +52,8 @@ public class DefaultBusinessHandler implements BusinessHandler {
 
             //售货机演示
             String rec = message.toString();
-            if ("9999".equals(rec)){
-                if (iotSession.getDeviceId() == null ) {
+            if ("9999".equals(rec)) {
+                if (iotSession.getDeviceId() == null) {
                     log.info("售货机演示设备注册");
                     iotSession.setDeviceId("9999");
                 }
@@ -71,17 +71,17 @@ public class DefaultBusinessHandler implements BusinessHandler {
                 //基础信息自动入库
                 DeviceInfoService deviceInfoService = (DeviceInfoService) SpringUtil.getBean("deviceInfoService");
                 HashMap<String, Object> parMap = new HashMap<>();
-                parMap.put("deviceId",deviceMsg.getId());
+                parMap.put("deviceId", deviceMsg.getId());
                 List<DeviceInfoDo> select = deviceInfoService.select(parMap);
-                if (select.size() == 0 ){
+                if (select.size() == 0) {
                     DeviceInfoDo deviceInfoDo = new DeviceInfoDo();
                     deviceInfoDo.setDeviceId(deviceMsg.getId());
-                    deviceInfoDo.setDeviceName("测试设备_"+deviceMsg.getId());
+                    deviceInfoDo.setDeviceName("测试设备_" + deviceMsg.getId());
                     deviceInfoDo.setCityId(3);
                     deviceInfoDo.setAddress("深圳");
                     deviceInfoDo.setNurse("蕴芯科技");
                     deviceInfoDo.setTel("136xxxxxxxx");
-                    if (deviceMsg.getBody() != null){
+                    if (deviceMsg.getBody() != null) {
                         String ccid = (String) deviceMsg.getBody().get("ccid");
                         String imei = (String) deviceMsg.getBody().get("imei");
                         deviceInfoDo.setDtuId(ccid);
@@ -147,8 +147,10 @@ public class DefaultBusinessHandler implements BusinessHandler {
                     if (usesLogDo != null) {
                         ack.put("oid", usesLogDo.getOrderId());
                         ack.put("uid", usesLogDo.getAuthCode());
-                        if (usePlanDo.getRealDuration()>0){
+                        if (usePlanDo.getRealDuration() > 0) {
                             usesLogDo.setDuration(usePlanDo.getRealDuration());
+                            //更新Duration （未使用结束）
+                            usePlanCache.update(deviceId, usePlanDo);
                         }
                         ack.put("min", usesLogDo.getDuration());
                     }
